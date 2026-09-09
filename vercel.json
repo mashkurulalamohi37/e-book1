@@ -1,10 +1,18 @@
 {
   "version": 2,
   "cleanUrls": true,
+  "trailingSlash": false,
   "rewrites": [
-    { "source": "/", "destination": "/index.html" },
     { "source": "/read", "destination": "/output/ebook/Non-performing-Loans-in-Bangladesh.html" },
+    { "source": "/book", "destination": "/output/ebook/Non-performing-Loans-in-Bangladesh.html" },
     { "source": "/pdf", "destination": "/output/ebook/Non-performing-Loans-in-Bangladesh.pdf" },
-    { "source": "/epub", "destination": "/output/ebook/Non-performing-Loans-in-Bangladesh.epub" }
+    { "source": "/epub", "destination": "/output/ebook/Non-performing-Loans-in-Bangladesh.epub" },
+    { "source": "/assets/:path*", "destination": "/output/assets/:path*" },
+    { "source": "/cover/:path*", "destination": "/output/cover/:path*" },
+    { "source": "/output/ebook/Non-performing-Loans-in-Bangladesh", "destination": "/output/ebook/Non-performing-Loans-in-Bangladesh.html" },
+    { "source": "/output/ebook/Non%20performing%20Loans%20in%20Bangladesh", "destination": "/output/ebook/Non-performing-Loans-in-Bangladesh.html" },
+    { "source": "/output/ebook/Non%20performing%20Loans%20in%20Bangladesh.html", "destination": "/output/ebook/Non-performing-Loans-in-Bangladesh.html" },
+    { "source": "/output/ebook/Non performing Loans in Bangladesh", "destination": "/output/ebook/Non-performing-Loans-in-Bangladesh.html" },
+    { "source": "/output/ebook/Non performing Loans in Bangladesh.html", "destination": "/output/ebook/Non-performing-Loans-in-Bangladesh.html" }
   ]
 }
