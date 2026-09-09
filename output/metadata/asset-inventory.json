@@ -1,0 +1,256 @@
+{
+  "raster_images": [
+    {
+      "file": "image1.jpeg",
+      "role": "Publisher Logo",
+      "path": "output/assets/images/image1.jpeg"
+    },
+    {
+      "file": "image2.jpeg",
+      "role": "Publisher Colophon",
+      "path": "output/assets/images/image2.jpeg"
+    },
+    {
+      "file": "image3.jpeg",
+      "role": "Author Portrait",
+      "path": "output/assets/images/image3.jpeg"
+    },
+    {
+      "file": "image4.jpeg",
+      "role": "Figure 1.1 Diagram",
+      "path": "output/assets/images/image4.jpeg"
+    },
+    {
+      "file": "image5.png",
+      "role": "Cronbach Alpha Formula",
+      "path": "output/assets/images/image5.png"
+    },
+    {
+      "file": "cover.png",
+      "role": "Book Cover",
+      "path": "output/cover/cover.png"
+    }
+  ],
+  "vector_charts": [
+    {
+      "figure": "1.2",
+      "file": "figure_1_2.png",
+      "path": "output/assets/charts/figure_1_2.png"
+    },
+    {
+      "figure": "1.3",
+      "file": "figure_1_3.png",
+      "path": "output/assets/charts/figure_1_3.png"
+    },
+    {
+      "figure": "1.4",
+      "file": "figure_1_4.png",
+      "path": "output/assets/charts/figure_1_4.png"
+    },
+    {
+      "figure": "3.1",
+      "file": "figure_3_1.png",
+      "path": "output/assets/charts/figure_3_1.png"
+    },
+    {
+      "figure": "3.2",
+      "file": "figure_3_2.png",
+      "path": "output/assets/charts/figure_3_2.png"
+    },
+    {
+      "figure": "3.3",
+      "file": "figure_3_3.png",
+      "path": "output/assets/charts/figure_3_3.png"
+    },
+    {
+      "figure": "3.4",
+      "file": "figure_3_4.png",
+      "path": "output/assets/charts/figure_3_4.png"
+    },
+    {
+      "figure": "3.5",
+      "file": "figure_3_5.png",
+      "path": "output/assets/charts/figure_3_5.png"
+    },
+    {
+      "figure": "3.6",
+      "file": "figure_3_6.png",
+      "path": "output/assets/charts/figure_3_6.png"
+    },
+    {
+      "figure": "3.7",
+      "file": "figure_3_7.png",
+      "path": "output/assets/charts/figure_3_7.png"
+    },
+    {
+      "figure": "5.1",
+      "file": "figure_5_1.png",
+      "path": "output/assets/charts/figure_5_1.png"
+    },
+    {
+      "figure": "5.2",
+      "file": "figure_5_2.png",
+      "path": "output/assets/charts/figure_5_2.png"
+    },
+    {
+      "figure": "5.3",
+      "file": "figure_5_3.png",
+      "path": "output/assets/charts/figure_5_3.png"
+    },
+    {
+      "figure": "5.4",
+      "file": "figure_5_4.png",
+      "path": "output/assets/charts/figure_5_4.png"
+    },
+    {
+      "figure": "5.5",
+      "file": "figure_5_5.png",
+      "path": "output/assets/charts/figure_5_5.png"
+    },
+    {
+      "figure": "5.6",
+      "file": "figure_5_6.png",
+      "path": "output/assets/charts/figure_5_6.png"
+    },
+    {
+      "figure": "5.7",
+      "file": "figure_5_7.png",
+      "path": "output/assets/charts/figure_5_7.png"
+    },
+    {
+      "figure": "5.8",
+      "file": "figure_5_8.png",
+      "path": "output/assets/charts/figure_5_8.png"
+    },
+    {
+      "figure": "5.9",
+      "file": "figure_5_9.png",
+      "path": "output/assets/charts/figure_5_9.png"
+    },
+    {
+      "figure": "5.10",
+      "file": "figure_5_10.png",
+      "path": "output/assets/charts/figure_5_10.png"
+    },
+    {
+      "figure": "6.1",
+      "file": "figure_6_1.png",
+      "path": "output/assets/charts/figure_6_1.png"
+    },
+    {
+      "figure": "6.2",
+      "file": "figure_6_2.png",
+      "path": "output/assets/charts/figure_6_2.png"
+    },
+    {
+      "figure": "6.3",
+      "file": "figure_6_3.png",
+      "path": "output/assets/charts/figure_6_3.png"
+    },
+    {
+      "figure": "6.4",
+      "file": "figure_6_4.png",
+      "path": "output/assets/charts/figure_6_4.png"
+    },
+    {
+      "figure": "6.5",
+      "file": "figure_6_5.png",
+      "path": "output/assets/charts/figure_6_5.png"
+    },
+    {
+      "figure": "6.6",
+      "file": "figure_6_6.png",
+      "path": "output/assets/charts/figure_6_6.png"
+    },
+    {
+      "figure": "6.7",
+      "file": "figure_6_7.png",
+      "path": "output/assets/charts/figure_6_7.png"
+    },
+    {
+      "figure": "6.8",
+      "file": "figure_6_8.png",
+      "path": "output/assets/charts/figure_6_8.png"
+    },
+    {
+      "figure": "6.9",
+      "file": "figure_6_9.png",
+      "path": "output/assets/charts/figure_6_9.png"
+    },
+    {
+      "figure": "6.10",
+      "file": "figure_6_10.png",
+      "path": "output/assets/charts/figure_6_10.png"
+    },
+    {
+      "figure": "6.11",
+      "file": "figure_6_11.png",
+      "path": "output/assets/charts/figure_6_11.png"
+    },
+    {
+      "figure": "6.12",
+      "file": "figure_6_12.png",
+      "path": "output/assets/charts/figure_6_12.png"
+    },
+    {
+      "figure": "6.13",
+      "file": "figure_6_13.png",
+      "path": "output/assets/charts/figure_6_13.png"
+    },
+    {
+      "figure": "6.14",
+      "file": "figure_6_14.png",
+      "path": "output/assets/charts/figure_6_14.png"
+    },
+    {
+      "figure": "6.15",
+      "file": "figure_6_15.png",
+      "path": "output/assets/charts/figure_6_15.png"
+    },
+    {
+      "figure": "6.16",
+      "file": "figure_6_16.png",
+      "path": "output/assets/charts/figure_6_16.png"
+    },
+    {
+      "figure": "6.17",
+      "file": "figure_6_17.png",
+      "path": "output/assets/charts/figure_6_17.png"
+    },
+    {
+      "figure": "6.18",
+      "file": "figure_6_18.png",
+      "path": "output/assets/charts/figure_6_18.png"
+    },
+    {
+      "figure": "6.19",
+      "file": "figure_6_19.png",
+      "path": "output/assets/charts/figure_6_19.png"
+    },
+    {
+      "figure": "6.20",
+      "file": "figure_6_20.png",
+      "path": "output/assets/charts/figure_6_20.png"
+    },
+    {
+      "figure": "6.21",
+      "file": "figure_6_21.png",
+      "path": "output/assets/charts/figure_6_21.png"
+    },
+    {
+      "figure": "10.1",
+      "file": "figure_10_1.png",
+      "path": "output/assets/charts/figure_10_1.png"
+    },
+    {
+      "figure": "10.2",
+      "file": "figure_10_2.png",
+      "path": "output/assets/charts/figure_10_2.png"
+    },
+    {
+      "figure": "10.3",
+      "file": "figure_10_3.png",
+      "path": "output/assets/charts/figure_10_3.png"
+    }
+  ]
+}

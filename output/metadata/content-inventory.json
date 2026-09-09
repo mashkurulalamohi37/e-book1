@@ -1,0 +1,91 @@
+{
+  "summary": {
+    "total_chapters": 10,
+    "total_appendices": 14,
+    "total_reference_entries": 205,
+    "total_frontmatter_sections": 11,
+    "keywords_index_terms": 44
+  },
+  "chapters_detail": [
+    {
+      "chapter": 1,
+      "title": "Introduction",
+      "paragraphs": 215,
+      "headings": 34,
+      "tables": 10,
+      "figures": 4
+    },
+    {
+      "chapter": 2,
+      "title": "Literature Review",
+      "paragraphs": 58,
+      "headings": 6,
+      "tables": 0,
+      "figures": 0
+    },
+    {
+      "chapter": 3,
+      "title": "Framework Development of the Study",
+      "paragraphs": 52,
+      "headings": 7,
+      "tables": 0,
+      "figures": 7
+    },
+    {
+      "chapter": 4,
+      "title": "Methodology of the Study",
+      "paragraphs": 12,
+      "headings": 11,
+      "tables": 0,
+      "figures": 0
+    },
+    {
+      "chapter": 5,
+      "title": "Presentation and Analysis of Data",
+      "paragraphs": 149,
+      "headings": 38,
+      "tables": 19,
+      "figures": 10
+    },
+    {
+      "chapter": 6,
+      "title": "Findings",
+      "paragraphs": 57,
+      "headings": 10,
+      "tables": 3,
+      "figures": 21
+    },
+    {
+      "chapter": 7,
+      "title": "Conclusion",
+      "paragraphs": 16,
+      "headings": 4,
+      "tables": 0,
+      "figures": 0
+    },
+    {
+      "chapter": 8,
+      "title": "Recommendation",
+      "paragraphs": 55,
+      "headings": 5,
+      "tables": 0,
+      "figures": 0
+    },
+    {
+      "chapter": 9,
+      "title": "Policy Implications",
+      "paragraphs": 20,
+      "headings": 4,
+      "tables": 0,
+      "figures": 0
+    },
+    {
+      "chapter": 10,
+      "title": "Scope for Further Research",
+      "paragraphs": 37,
+      "headings": 1,
+      "tables": 0,
+      "figures": 2
+    }
+  ]
+}

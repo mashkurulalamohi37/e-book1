@@ -1,0 +1,146 @@
+{
+  "front_matter": [
+    "Title Page",
+    "Copyright Page",
+    "Dedication",
+    "About the Author",
+    "Foreword",
+    "Acknowledgments",
+    "Preface",
+    "Contents",
+    "List of Tables",
+    "Table of Acronyms",
+    "List of Figures"
+  ],
+  "chapters": [
+    {
+      "number": 1,
+      "title": "Introduction",
+      "element_count": 263
+    },
+    {
+      "number": 2,
+      "title": "Literature Review",
+      "element_count": 64
+    },
+    {
+      "number": 3,
+      "title": "Framework Development of the Study",
+      "element_count": 66
+    },
+    {
+      "number": 4,
+      "title": "Methodology of the Study",
+      "element_count": 23
+    },
+    {
+      "number": 5,
+      "title": "Presentation and Analysis of Data",
+      "element_count": 216
+    },
+    {
+      "number": 6,
+      "title": "Findings",
+      "element_count": 91
+    },
+    {
+      "number": 7,
+      "title": "Conclusion",
+      "element_count": 20
+    },
+    {
+      "number": 8,
+      "title": "Recommendation",
+      "element_count": 60
+    },
+    {
+      "number": 9,
+      "title": "Policy Implications",
+      "element_count": 24
+    },
+    {
+      "number": 10,
+      "title": "Scope for Further Research",
+      "element_count": 40
+    }
+  ],
+  "references": {
+    "title": "Reference",
+    "entry_count": 205
+  },
+  "appendices": [
+    {
+      "number": "I",
+      "title": "Questionnaire on the bankers and borrowers’ perception on the rising non-performing loans (NPLs)",
+      "element_count": 6
+    },
+    {
+      "number": "II",
+      "title": "Questionnaire for the comparison between state-owned commercial banks (SCBs) and private commercial banks (PCBs)",
+      "element_count": 1
+    },
+    {
+      "number": "III",
+      "title": "Banking sector year-wise gross NPL ratio and its composition",
+      "element_count": 2
+    },
+    {
+      "number": "IV",
+      "title": "Banking sector NPL composition",
+      "element_count": 4
+    },
+    {
+      "number": "V",
+      "title": "Banking sector deposits breakdown excluding inter bank deposit",
+      "element_count": 4
+    },
+    {
+      "number": "VI",
+      "title": "Banking sector selected ratios",
+      "element_count": 2
+    },
+    {
+      "number": "VII",
+      "title": "Banking sector year-wise ADR",
+      "element_count": 2
+    },
+    {
+      "number": "VIII",
+      "title": "NPL ratio of different bank groups",
+      "element_count": 2
+    },
+    {
+      "number": "IX",
+      "title": "ROA of different bank groups",
+      "element_count": 2
+    },
+    {
+      "number": "X",
+      "title": "ROE of different bank groups",
+      "element_count": 2
+    },
+    {
+      "number": "XI",
+      "title": "Cost to income ratio (efficiency) of different bank groups",
+      "element_count": 2
+    },
+    {
+      "number": "XII",
+      "title": "Writing-off bad debts of different bank groups",
+      "element_count": 3
+    },
+    {
+      "number": "XIII",
+      "title": "Provision maintained by all banks",
+      "element_count": 3
+    },
+    {
+      "number": "XIV",
+      "title": "Overall banking industry loans and deposits of different bank groups",
+      "element_count": 4
+    }
+  ],
+  "back_matter": [
+    "Key Words Index"
+  ]
+}
