@@ -7,64 +7,237 @@
   <style>
 
 :root {
-  --font-serif: "Georgia", "Source Serif", "Noto Serif", "Times New Roman", serif;
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --color-primary: #0f2b48;
-  --color-secondary: #4a5d6e;
+  --font-serif: "Georgia", "Cambria", "Times New Roman", serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --color-primary: #0b1d33;
+  --color-secondary: #475569;
   --color-accent: #c5a059;
-  --color-text: #1f2429;
+  --color-accent-hover: #b08d48;
+  --color-text: #1e293b;
   --color-bg: #ffffff;
+  --color-bg-rgb: 255, 255, 255;
   --color-bg-alt: #f8fafc;
-  --color-border: #cbd5e1;
+  --color-border: #e2e8f0;
   --sidebar-w: 320px;
+  --topbar-h: 56px;
+  --reader-font-size: 17px;
+  --content-max-w: 860px;
+}
+
+body[data-theme="sepia"] {
+  --color-primary: #433422;
+  --color-secondary: #63523f;
+  --color-accent: #a07830;
+  --color-accent-hover: #8c6724;
+  --color-text: #2d241e;
+  --color-bg: #fbf0d9;
+  --color-bg-rgb: 251, 240, 217;
+  --color-bg-alt: #f4e5c8;
+  --color-border: #e6d5b8;
+}
+
+body[data-theme="dark"] {
+  --color-primary: #93c5fd;
+  --color-secondary: #94a3b8;
+  --color-accent: #fcd34d;
+  --color-accent-hover: #fde047;
+  --color-text: #f1f5f9;
+  --color-bg: #0f172a;
+  --color-bg-rgb: 15, 23, 42;
+  --color-bg-alt: #1e293b;
+  --color-border: #334155;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --color-primary: #8cb4d9;
+  body:not([data-theme="light"]):not([data-theme="sepia"]) {
+    --color-primary: #93c5fd;
     --color-secondary: #94a3b8;
-    --color-accent: #e5c158;
-    --color-text: #e2e8f0;
+    --color-accent: #fcd34d;
+    --color-accent-hover: #fde047;
+    --color-text: #f1f5f9;
     --color-bg: #0f172a;
+    --color-bg-rgb: 15, 23, 42;
     --color-bg-alt: #1e293b;
     --color-border: #334155;
   }
 }
 
-* { box-sizing: border-box; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--topbar-h) + 1rem);
+}
 
 body {
   font-family: var(--font-serif);
-  font-size: 17px;
-  line-height: 1.7;
+  font-size: var(--reader-font-size);
+  line-height: 1.75;
   color: var(--color-text);
   background-color: var(--color-bg);
-  margin: 0;
-  padding: 0;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  min-height: 100vh;
+}
+
+/* Sticky Top Navigation Bar */
+#reader-topbar {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--topbar-h);
+  background: rgba(var(--color-bg-rgb), 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-border);
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  z-index: 1000;
+  font-family: var(--font-sans);
+}
+
+.topbar-left, .topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.topbar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-alt);
+  color: var(--color-text);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.topbar-btn:hover {
+  background: var(--color-border);
+  color: var(--color-primary);
+}
+
+.topbar-btn svg {
+  flex-shrink: 0;
+}
+
+.chapter-indicator {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  max-width: 320px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-left: 0.5rem;
+}
+
+@media (max-width: 800px) {
+  .chapter-indicator { display: none; }
+  .btn-text { display: none; }
+  .topbar-btn { padding: 0.4rem 0.55rem; }
+}
+
+.font-controls, .theme-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  background: var(--color-bg-alt);
+  padding: 2px 4px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+}
+
+.tool-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+
+.tool-btn:hover, .tool-btn.active {
+  background: var(--color-border);
+  color: var(--color-primary);
+}
+
+/* Reading Progress Bar */
+#reading-progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: var(--color-accent);
+  transition: width 0.1s ease-out;
+}
+
+/* Main Layout Wrapper */
+.layout-wrapper {
+  display: flex;
+  width: 100%;
 }
 
 /* Sidebar Navigation */
 #sidebar {
   width: var(--sidebar-w);
-  height: 100vh;
+  height: calc(100vh - var(--topbar-h));
   position: sticky;
-  top: 0;
+  top: var(--topbar-h);
   background: var(--color-bg-alt);
   border-right: 1px solid var(--color-border);
   overflow-y: auto;
-  padding: 1.5rem 1rem;
+  padding: 1.25rem 1rem;
   font-family: var(--font-sans);
   font-size: 0.88rem;
   flex-shrink: 0;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1050;
 }
 
-#sidebar h2 {
-  font-size: 1.1rem;
-  color: var(--color-primary);
-  margin-top: 0;
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   border-bottom: 2px solid var(--color-accent);
-  padding-bottom: 0.4rem;
+  padding-bottom: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.sidebar-header h2 {
+  font-size: 1.05rem;
+  color: var(--color-primary);
+  margin: 0;
+  border: none;
+  padding: 0;
+}
+
+.close-sidebar-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  color: var(--color-secondary);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.close-sidebar-btn:hover {
+  background: var(--color-border);
+  color: var(--color-primary);
 }
 
 #sidebar ul {
@@ -74,16 +247,17 @@ body {
 }
 
 #sidebar li {
-  margin: 0.4rem 0;
+  margin: 0.3rem 0;
 }
 
 #sidebar a {
   color: var(--color-text);
   text-decoration: none;
   display: block;
-  padding: 4px 6px;
-  border-radius: 4px;
-  transition: background 0.15s;
+  padding: 6px 8px;
+  border-radius: 6px;
+  line-height: 1.35;
+  transition: background 0.15s, color 0.15s;
 }
 
 #sidebar a:hover {
@@ -91,29 +265,67 @@ body {
   color: var(--color-primary);
 }
 
-#sidebar .nav-ch {
-  font-weight: 600;
+#sidebar a.active {
+  background: rgba(197, 160, 89, 0.15);
   color: var(--color-primary);
+  font-weight: 700;
+  border-left: 3px solid var(--color-accent);
+}
+
+#sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 1040;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Off-canvas Responsive Sidebar for Tablets & Mobile */
+@media (max-width: 920px) {
+  #sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: min(85vw, 340px);
+    height: 100vh;
+    transform: translateX(-100%);
+    box-shadow: 6px 0 24px rgba(0, 0, 0, 0.25);
+  }
+  #sidebar.open {
+    transform: translateX(0);
+  }
+  .close-sidebar-btn {
+    display: block;
+  }
+  #sidebar-backdrop.open {
+    display: block;
+    opacity: 1;
+  }
 }
 
 /* Main Content Container */
 #content {
   flex: 1;
-  max-width: 900px;
+  max-width: var(--content-max-w);
   margin: 0 auto;
-  padding: 2.5rem 2rem;
+  padding: 2.5rem 2rem 6rem;
+  overflow-x: hidden;
 }
 
-@media (max-width: 900px) {
-  body { display: block; }
-  #sidebar {
-    position: relative;
-    width: 100%;
-    height: auto;
-    border-right: none;
-    border-bottom: 1px solid var(--color-border);
+@media (max-width: 920px) {
+  #content {
+    padding: 1.5rem 1.25rem 5rem;
   }
-  #content { padding: 1.5rem 1rem; }
+}
+
+@media (max-width: 480px) {
+  #content {
+    padding: 1.25rem 0.85rem 4rem;
+  }
 }
 
 /* Typography */
@@ -124,7 +336,7 @@ h1, h2, h3, h4 {
 }
 
 h1 {
-  font-size: 2.2rem;
+  font-size: clamp(1.75rem, 4vw, 2.3rem);
   text-align: center;
   border-bottom: 2px solid var(--color-accent);
   padding-bottom: 0.6rem;
@@ -135,7 +347,7 @@ h1 {
 .chapter-number {
   display: block;
   font-family: var(--font-sans);
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   letter-spacing: 2px;
   color: var(--color-accent);
   text-transform: uppercase;
@@ -143,39 +355,82 @@ h1 {
 }
 
 h2 {
-  font-size: 1.5rem;
+  font-size: clamp(1.3rem, 2.5vw, 1.6rem);
   margin-top: 2.2rem;
+  margin-bottom: 0.8rem;
   border-left: 4px solid var(--color-accent);
   padding-left: 0.8rem;
 }
 
 h3 {
-  font-size: 1.2rem;
-  margin-top: 1.5rem;
+  font-size: clamp(1.1rem, 2vw, 1.25rem);
+  margin-top: 1.6rem;
+  margin-bottom: 0.6rem;
   font-style: italic;
 }
 
 p {
-  margin: 1rem 0;
+  margin: 1.15rem 0;
   text-align: justify;
+  text-justify: inter-word;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+@media (max-width: 600px) {
+  p {
+    text-align: left;
+  }
 }
 
 .p-center {
   text-align: center;
 }
 
-/* Figures */
+/* Responsive Figures & Lightbox */
 figure {
   margin: 2.5rem 0;
   text-align: center;
+  position: relative;
+}
+
+.figure-wrapper {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  background: #ffffff;
 }
 
 figure img {
+  display: block;
   max-width: 100%;
   height: auto;
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease;
+}
+
+.figure-wrapper:hover img {
+  transform: scale(1.015);
+}
+
+.zoom-badge {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(15, 43, 72, 0.85);
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  backdrop-filter: blur(4px);
+  pointer-events: none;
+  opacity: 0.85;
 }
 
 figcaption {
@@ -184,22 +439,112 @@ figcaption {
   font-weight: 600;
   color: var(--color-primary);
   margin-top: 0.8rem;
+  padding: 0 0.5rem;
 }
 
-/* Tables */
+/* Lightbox Modal */
+.image-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.image-modal.open {
+  display: flex;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.modal-content {
+  position: relative;
+  max-width: 95vw;
+  max-height: 90vh;
+  z-index: 3010;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-content img {
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  background: #ffffff;
+}
+
+.modal-caption {
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  margin-top: 0.85rem;
+  text-align: center;
+  max-width: 800px;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #ffffff;
+  font-size: 1.5rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.modal-close-btn:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* Responsive Tables */
 .table-container {
   width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   margin: 2rem 0;
   border: 1px solid var(--color-border);
-  border-radius: 6px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+  position: relative;
+  background: var(--color-bg);
+}
+
+.table-scroll-hint {
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+  color: var(--color-secondary);
+  background: var(--color-bg-alt);
+  padding: 4px 10px;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
   font-family: var(--font-sans);
-  font-size: 0.88rem;
+  font-size: clamp(0.78rem, 1.8vw, 0.88rem);
   line-height: 1.4;
 }
 
@@ -213,6 +558,9 @@ th {
   background: var(--color-primary);
   color: #ffffff;
   font-weight: 600;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 tr:nth-child(even) td {
@@ -236,9 +584,10 @@ tr:nth-child(even) td {
 }
 
 .cover-hero img {
-  max-width: 480px;
-  border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+  max-width: min(100%, 450px);
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+  height: auto;
 }
 
 .title-page {
@@ -247,7 +596,7 @@ tr:nth-child(even) td {
 }
 
 .title-page h1 {
-  font-size: 2.5rem;
+  font-size: clamp(1.8rem, 4.5vw, 2.6rem);
   margin-bottom: 1rem;
 }
 
@@ -258,8 +607,9 @@ tr:nth-child(even) td {
 
 .author-portrait img {
   border-radius: 50%;
-  max-width: 180px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  max-width: 160px;
+  height: auto;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
 }
 
 .reference-list {
@@ -272,6 +622,7 @@ tr:nth-child(even) td {
   padding-left: 1.8rem;
   text-indent: -1.8rem;
   font-size: 0.95rem;
+  line-height: 1.6;
 }
 
 .reference-item a {
@@ -279,22 +630,78 @@ tr:nth-child(even) td {
   word-break: break-all;
 }
 
-.back-to-top {
-  display: block;
-  text-align: center;
-  margin: 3rem 0;
-  font-family: var(--font-sans);
-  font-size: 0.9rem;
-  color: var(--color-secondary);
+/* Floating Back-to-Top Button */
+#btn-back-to-top {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: #0b1d33;
+  border: none;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.25s ease;
+  z-index: 990;
+}
+
+#btn-back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+#btn-back-to-top:hover {
+  background: var(--color-accent-hover);
+  transform: translateY(-3px);
 }
 
   </style>
 </head>
 <body>
-  <nav id="sidebar">
-    <h2>Contents</h2>
-    <ul>
-      <li><a href='#cover' class='nav-ch'>Cover</a></li>
+  <!-- Sticky Topbar Navigation -->
+  <header id="reader-topbar">
+    <div class="topbar-left">
+      <button id="btn-toggle-sidebar" class="topbar-btn" aria-label="Toggle Table of Contents" title="Table of Contents">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        <span class="btn-text">Contents</span>
+      </button>
+      <a href="/" class="topbar-btn" title="Back to Portal">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        <span class="btn-text">Portal</span>
+      </a>
+      <span id="current-chapter-indicator" class="chapter-indicator">Non-performing Loans in Bangladesh</span>
+    </div>
+    <div class="topbar-right">
+      <div class="font-controls">
+        <button id="btn-font-dec" class="tool-btn" title="Decrease Font Size">A-</button>
+        <button id="btn-font-inc" class="tool-btn" title="Increase Font Size">A+</button>
+      </div>
+      <div class="theme-controls">
+        <button id="theme-light-btn" class="tool-btn" title="Light Theme">☀️</button>
+        <button id="theme-sepia-btn" class="tool-btn" title="Sepia Theme">📜</button>
+        <button id="theme-dark-btn" class="tool-btn" title="Dark Theme">🌙</button>
+      </div>
+    </div>
+    <div id="reading-progress-bar"></div>
+  </header>
+
+  <!-- Responsive Layout -->
+  <div class="layout-wrapper">
+    <div id="sidebar-backdrop"></div>
+    <nav id="sidebar">
+      <div class="sidebar-header">
+        <h2>Contents</h2>
+        <button id="btn-close-sidebar" class="close-sidebar-btn" aria-label="Close Table of Contents">✕</button>
+      </div>
+      <ul>
+        <li><a href='#cover' class='nav-ch'>Cover</a></li>
 <li><a href='#titlepage' class='nav-ch'>Title Page</a></li>
 <li><a href='#copyright' class='nav-ch'>Publication Details</a></li>
 <li><a href='#dedication' class='nav-ch'>Dedication</a></li>
@@ -327,10 +734,10 @@ tr:nth-child(even) td {
 <li><a href='#appendix-xiii' class='nav-ch'>Appendix XIII: Provision maintained by all banks...</a></li>
 <li><a href='#appendix-xiv' class='nav-ch'>Appendix XIV: Overall banking industry loans and ...</a></li>
 <li><a href='#keywords' class='nav-ch'>Key Words</a></li>
-    </ul>
-  </nav>
-  <main id="content">
-    <section id="cover" class="cover-hero">
+      </ul>
+    </nav>
+    <main id="content">
+      <section id="cover" class="cover-hero">
   <img src="../cover/cover.png" alt="Book Cover: Non-performing Loans in Bangladesh"/>
 </section>
 <section id="titlepage" class="title-page">
@@ -363,6 +770,7 @@ tr:nth-child(even) td {
 <section id="acronyms">
   <h1>Table of Acronyms</h1>
   <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-acronyms'>
 <caption>Table of Acronyms</caption>
 <thead>
@@ -617,7 +1025,10 @@ tr:nth-child(even) td {
 <p id='p-212'>Political influence has heavily plagued the financial sector in Bangladesh with its sheer dominance in determining loan sanction. When political intervention plays a major role in credit selection, it eventually leads to a failed banking system. At times, it is not so much power and references, as the neglect of regular evaluations that is responsible for increase in number of bad loans.</p>
 <p id='p-214'>Coming back to the current condition of non-performing loans of Bangladesh, it is important to follow certain trends in loan quality before any assumption can be made. The total non-performing loan of Bangladesh has gone up from Tk. 224.8 billion to Tk. 1033 billion in the time period 2009 to September 2021. Another reality attached to the history of NPL in Bangladesh is the rising trend of writing-off bad debts. The state-owned commercial banks and the private commercial banks have been in a marathon for writing off bad debts. The total loans which were written- off up to Sep 2021 were 151 percent higher than the loans which were written-off in 2010. The total written-off bad debts up to September 2021 were Tk. 436.1 billion. Of this total amount, the primary contributors are the state-owned commercial banks who wrote-off approximately 40 percent of the total written-off loans up to September 2021. In figures 1.2 and figure 1.3, the rapidly declining bad loans can also be explained by the yearly write-off of the banking sector, in many instances. Compared with other countries in South Asia and Europe, Bangladesh remains in a critical position in handling the rising number of NPL over the last few years. As this study centers on the conventional private commercial banks, the classification of the banking industry in figure 1.1 will reveal the area on which this study is based.</p>
 <figure id='fig-1-1'>
-  <img src='../assets/images/image4.jpeg' alt='Figure 1.1: Classification of the banking industry of Bangladesh'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/images/image4.jpeg' alt='Figure 1.1: Classification of the banking industry of Bangladesh' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 1.1: Classification of the banking industry of Bangladesh</figcaption>
 </figure>
 <p class='p-center' id='src-217'>Source: Bangladesh Bank.</p>
@@ -629,7 +1040,10 @@ tr:nth-child(even) td {
 <p class='p-center' id='fig-cap-227'>Figure 1.2: Non-performing loan as the percentage of total loans of the banking sector of Bangladesh</p>
 <p class='p-center' id='p-228'>from 1998 to 2021 September.</p>
 <figure id='fig-1-2'>
-  <img src='../assets/charts/figure_1_2.png' alt='Figure 1.2'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_1_2.png' alt='Figure 1.2' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 1.2</figcaption>
 </figure>
 <p class='p-center' id='src-231'>Source: Bangladesh Bank annual and quarterly reports.</p>
@@ -637,13 +1051,19 @@ tr:nth-child(even) td {
 <p class='p-center' id='fig-cap-235'>Figure 1.3: Non-performing loan as the percentage of total loans of the private commercial banks of Bangladesh</p>
 <p class='p-center' id='p-236'>from 1998 to 2021 September.</p>
 <figure id='fig-1-3'>
-  <img src='../assets/charts/figure_1_3.png' alt='Figure 1.3'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_1_3.png' alt='Figure 1.3' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 1.3</figcaption>
 </figure>
 <p class='p-center' id='src-239'>Source: Bangladesh Bank annual and quarterly reports.</p>
 <p class='p-center' id='fig-cap-240'>Figure 1.4: Non-performing loan as the percentage of total loans of the state-owned and private banks of Bangladesh from 2006 to 2021 September.</p>
 <figure id='fig-1-4'>
-  <img src='../assets/charts/figure_1_4.png' alt='Figure 1.4'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_1_4.png' alt='Figure 1.4' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 1.4</figcaption>
 </figure>
 <p class='p-center' id='src-242'>Source: Bangladesh Bank annual and quarterly reports.</p>
@@ -753,6 +1173,7 @@ tr:nth-child(even) td {
 <h3 id='h3-406'>Loan classification and provision by Bangladesh Bank</h3>
 <p class='p-center' id='p-408'>Table 1.1: Loan classification and provision by the Bangladesh Bank</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-4'>
 <caption>Table 1.1: Loan classification and provision by the Bangladesh Bank</caption>
 <thead>
@@ -853,6 +1274,7 @@ tr:nth-child(even) td {
 <h3 id='h3-413'>General Provisions:</h3>
 <p class='p-center' id='p-415'>Table 1.2: General provisions</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-5'>
 <caption>Table 1.2: General provisions</caption>
 <thead>
@@ -899,6 +1321,7 @@ tr:nth-child(even) td {
 <h3 id='h3-418'>Specific provisions:</h3>
 <p class='p-center' id='p-420'>Table 1.3: Specific provisions</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-6'>
 <caption>Table 1.3: Specific provisions</caption>
 <thead>
@@ -939,6 +1362,7 @@ tr:nth-child(even) td {
 <p class='p-center' id='p-424'>Table 1.4: Provision for short-term agricultural</p>
 <p class='p-center' id='p-425'>and micro-credits</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-7'>
 <caption>and micro-credits</caption>
 <thead>
@@ -961,6 +1385,7 @@ tr:nth-child(even) td {
 <h3 id='h3-429'>Rate of provisions by Bangladesh Bank</h3>
 <p class='p-center' id='p-433'>Table 1.5: Rate of provisions by Bangladesh Bank</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-8'>
 <caption>Table 1.5: Rate of provisions by Bangladesh Bank</caption>
 <thead>
@@ -1100,6 +1525,7 @@ ard</td>
 <h3 id='h3-507'>Time limit for rescheduling continuous loan</h3>
 <p class='p-center' id='p-508'>Table 1.6: Time limit for rescheduling continuous loan</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-9'>
 <caption>Table 1.6: Time limit for rescheduling continuous loan</caption>
 <thead>
@@ -1144,6 +1570,7 @@ bad/loss</th>
 <h3 id='h3-519'>Time limit for rescheduling demand loan</h3>
 <p class='p-center' id='p-521'>Table 1.7: Time limit for rescheduling demand loan</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-10'>
 <caption>Table 1.7: Time limit for rescheduling demand loan</caption>
 <thead>
@@ -1185,6 +1612,7 @@ bad/loss</th>
 <h3 id='h3-530'>Time limit for rescheduling fixed term loan:</h3>
 <p class='p-center' id='p-532'>Table 1.8: Time limit for rescheduling fixed term loan</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-11'>
 <caption>Table 1.8: Time limit for rescheduling fixed term loan</caption>
 <thead>
@@ -1225,6 +1653,7 @@ bad/loss</th>
 <h3 id='h3-544'>D. Time limit for rescheduling for short-term agricultural and micro-credit:</h3>
 <p id='p-546'>For the rescheduling of any classified short-term agricultural and micro-credit, six months can be added after the expiry date of the last installment. This mainly determines the repayment schedule which starts from the day of rescheduling. According to the BRPD Circular No. 06 published in 29 May, 2013, if the loans are rescheduled after the expiry date, the following time-limit will be pertinent:</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-12'>
 <caption>For the rescheduling of any classified short-term agricultural and micro-credit, six months can be added after the expiry date of the last installment. This mainly determines the repayment schedule which starts from the day of rescheduling. According to the BRPD Circular No. 06 published in 29 May, 2013, if the loans are rescheduled after the expiry date, the following time-limit will be pertinent:</caption>
 <thead>
@@ -1254,6 +1683,7 @@ bad/loss</th>
 <p id='p-559'>As mentioned earlier, demand loans are loans which are required by the banks upon the need of the bank.</p>
 <p id='p-560'>Whenever a demand loan or continuous loan is converted into a term loan, according to the BRPD Circular no. 08, first rescheduling may take place against down payment on the basis of loan amount—</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-13'>
 <caption>Whenever a demand loan or continuous loan is converted into a term loan, according to the BRPD Circular no. 08, first rescheduling may take place against down payment on the basis of loan amount—</caption>
 <thead>
@@ -1395,7 +1825,10 @@ bad/loss</th>
 <p id='p-756'>Now if we glance towards the developed countries, we are met with a completely different scenario. For instance, despite the economic low in 2008, most of the 35 member countries of the OECD (Organization for Economic Cooperation and Development) showed a declining NPL rate for the period 2011–2020. Although the NPL ratio of some countries like Austria, Belgium, Greece, Italy, Portugal, Sweden and Turkey has inclined or fluctuated, the NPL ratio of this community in general has declined from 5.48 percent to 3.03 percent during the ten-year period from 2011 to 2020 (Figure 3.2).</p>
 <p class='p-center' id='fig-cap-757'>Figure 3.1: Non-performing loan percentage (%) to total loans of the SAARC (South Asian Association for Regional Cooperation) member countries (2011-2020)</p>
 <figure id='fig-3-1'>
-  <img src='../assets/charts/figure_3_1.png' alt='Figure 3.1'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_3_1.png' alt='Figure 3.1' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 3.1</figcaption>
 </figure>
 <p class='p-center' id='src-759'>Source: World Bank.</p>
@@ -1403,7 +1836,10 @@ bad/loss</th>
 <p class='p-center' id='fig-cap-763'>Figure 3.2: OECD (Organization for Economic Cooperation and Development) Countries</p>
 <p class='p-center' id='p-764'>NPL 2011–2020 in percentage (%)</p>
 <figure id='fig-3-2'>
-  <img src='../assets/charts/figure_3_2.png' alt='Figure 3.2'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_3_2.png' alt='Figure 3.2' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 3.2</figcaption>
 </figure>
 <p class='p-center' id='src-766'>Source: World Bank</p>
@@ -1422,11 +1858,17 @@ bad/loss</th>
 <p id='p-792'>The ADR (Advance Deposit Ratio) has increased to 87 percent from the existing 85 percent for conventional banks and 92 percent from the existing 90 percent for shariah-based Islamic banks by Bangladesh Bank. The revise rate effected from April 15, 2020. Setting aside the existing loans, the inclusion of every new deposit creates the possibility of loans to become good or non-performing. Every bank knowingly or unknowingly operates under the condition of the demand of loans and supply of funds. If there is any discrepancy in the proportion of loans and deposits, the risk exposure of banks change. Higher loans relative to deposits increase the risk exposure of banks. This is the risk posed by any sudden withdrawal by depositors. Higher loan-deposit ratio also indicates higher demand of loans relative to deposits for investment activities. This does not necessarily imply that higher demand of loans will result in higher return for banks. This may indicate that the politicized environment has created a demand, which would not have occurred under normal circumstances.</p>
 <p id='p-794'>In general, the banking industry has been experiencing a declining rate of growth of loans since 2006 (figure 3.3). Since 2011 particularly— just after the share market crash—the loan growth rate declined tremendously. The reasons for this is obvious. Just before the share market collapse, huge amounts of loans were diverted into share market investments, which did not profit at all. Consequently, banks became cautious about disbursing loans in the years following the crash. Higher loan growth has become an even greater concern for banks in the last six to seven years owing to the risks of incurring bad loans. It also involves the decision to increase loans along with accumulation of higher deposits and higher cost of fund, which again poses serious risks for banks. However, banks sometimes venture beyond the norm and try to capitalize the higher deposits irrationally, which results in non- performing loans in the long run.</p>
 <figure id='fig-3-3'>
-  <img src='../assets/charts/figure_3_3.png' alt='Figure 3.3'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_3_3.png' alt='Figure 3.3' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 3.3</figcaption>
 </figure>
 <figure id='fig-3-4'>
-  <img src='../assets/charts/figure_3_4.png' alt='Figure 3.4'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_3_4.png' alt='Figure 3.4' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 3.4</figcaption>
 </figure>
 <p class='p-center' id='src-797'>Source: Bangladesh Bank</p>
@@ -1442,11 +1884,17 @@ bad/loss</th>
 <p class='p-center' id='p-816'>Impact of efficiency, credit quality, write-off and loan recovery on the profitability of state-owned and private commercial banks</p>
 <p id='p-818'>The persistent growth of NPLs in the state-owned commercial banks over the last few years has triggered the need to analyze the reasons for such an upsurge. Compared to the private commercial banks, the rate at which the bad debts of the public banks have inclined has created concern among the economists and researchers. Consequently, the write-offs in the public banks have also been rising at an alarming rate. Surprisingly, the write-offs in the private commercial banks have also been in alignment to the write-offs of the public banks. Despite this alignment, the rate of loan write-off was higher in the public banks compared to the private banks from 2009 to September 2021. The subsequent table depicts the trend of the loan write-offs of these bank groups. It indicates that banks of different groups can become responsive to external stimuli to take off the bad debts from their books almost at the same time frame. The graph below to the left shows an interesting trend among these different bank groups in terms of cost inefficiency. From 2009 to onwards the cost for one taka income for public and private banks has been changing in opposing directions. The year when inefficiency decreased in private banks, the inefficiency quotient rose higher among the public banks. Since the profitability of both public and private banks has been declining while their inefficiency graph is moving in opposite directions each year, it can be assumed that the relationship between profitability and inefficiency between these two different bank groups will not match.</p>
 <figure id='fig-3-5'>
-  <img src='../assets/charts/figure_3_5.png' alt='Figure 3.5'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_3_5.png' alt='Figure 3.5' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 3.5</figcaption>
 </figure>
 <figure id='fig-3-6'>
-  <img src='../assets/charts/figure_3_6.png' alt='Figure 3.6'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_3_6.png' alt='Figure 3.6' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 3.6</figcaption>
 </figure>
 <p class='p-center' id='src-820'>Source: Bangladesh Bank</p>
@@ -1455,7 +1903,10 @@ bad/loss</th>
 <p class='p-center' id='fig-cap-825'>Figure 3.7: Comparison of the ROA and loan write-off of the state-owned and private commercial banks</p>
 <p class='p-center' id='p-826'>(2009-September 2021)</p>
 <figure id='fig-3-7'>
-  <img src='../assets/charts/figure_3_7.png' alt='Figure 3.7'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_3_7.png' alt='Figure 3.7' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 3.7</figcaption>
 </figure>
 <p class='p-center' id='src-828'>Source: Bangladesh Bank</p>
@@ -1528,6 +1979,7 @@ bad/loss</th>
 <h3 id='h3-932'>Variables used in finding the determinants of non-performing loans:</h3>
 <p class='p-center' id='p-934'>Table 5.1: Variables used in the qualitative analysis</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-14'>
 <caption>Table 5.1: Variables used in the qualitative analysis</caption>
 <thead>
@@ -1681,6 +2133,7 @@ decreasing NPLs.</td>
 <p class='p-center' id='p-947'>Table 5.2: Bankers’ perception on the determinants of non-performing loans (NPLs)</p>
 <p id='p-949'>1=strongly disagree, 2=disagree, 3=neutral, 4=agree, 5=strongly agree.</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-15'>
 <caption>1=strongly disagree, 2=disagree, 3=neutral, 4=agree, 5=strongly agree.</caption>
 <thead>
@@ -2196,6 +2649,7 @@ reduces NPLs</td>
 <p class='p-center' id='p-953'>of NPLs</p>
 <p id='p-955'>1=strongly disagree, 2=disagree, 3=neutral, 4=agree, 5=strongly agree.</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-16'>
 <caption>1=strongly disagree, 2=disagree, 3=neutral, 4=agree, 5=strongly agree.</caption>
 <thead>
@@ -2582,6 +3036,7 @@ reduces NPLs</td>
 <p class='p-center' id='p-958'>Table 5.4: Total perception on the determinants of non-performing loans (NPLs)</p>
 <p id='p-960'>1=strongly disagree, 2=disagree, 3=neutral, 4=agree, 5=strongly agree.</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-17'>
 <caption>1=strongly disagree, 2=disagree, 3=neutral, 4=agree, 5=strongly agree.</caption>
 <thead>
@@ -3024,6 +3479,7 @@ NPLs</td>
 <p class='p-center' id='p-963'>Table 5.5: Bankers’ perception in percentage (%) on the determinants of non-performing loans (NPLs)</p>
 <p id='p-965'>1=strongly disagree, 2=disagree, 3=neutral, 4=agree, 5=strongly agree.</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-18'>
 <caption>1=strongly disagree, 2=disagree, 3=neutral, 4=agree, 5=strongly agree.</caption>
 <thead>
@@ -3468,6 +3924,7 @@ NPLs</td>
 <p class='p-center' id='p-968'>Table 5.6: Borrowers’ perception in percentage (%) on the determinants of non-performing loans (NPLs)</p>
 <p id='p-970'>1=strongly disagree, 2=disagree, 3=neutral, 4=agree, 5=strongly agree.</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-19'>
 <caption>1=strongly disagree, 2=disagree, 3=neutral, 4=agree, 5=strongly agree.</caption>
 <thead>
@@ -3804,6 +4261,7 @@ NPLs</td>
 <p class='p-center' id='p-974'>Table 5.7: Total perception in percentage (%) on the determinants of non-performing loans (NPLs)</p>
 <p id='p-976'>1=strongly disagree, 2=disagree, 3=neutral, 4=agree, 5=strongly agree.</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-20'>
 <caption>1=strongly disagree, 2=disagree, 3=neutral, 4=agree, 5=strongly agree.</caption>
 <thead>
@@ -4248,6 +4706,7 @@ NPLs</td>
 <h2 id='h2-980'>Variables used in comparison between the state-owned and private commercial banks</h2>
 <p class='p-center' id='p-982'>Table 5.8: Variables used in the qualitative analysis of the comparison between state-owned and private commercial banks</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-21'>
 <caption>Table 5.8: Variables used in the qualitative analysis of the comparison between state-owned and private commercial banks</caption>
 <thead>
@@ -4388,6 +4847,7 @@ SCBs.</td>
 <p class='p-center' id='p-1000'>Table 5.9: Vriables used in the qualitative analysis of the comparison between the state-owned and private commercial banks</p>
 <p id='p-1002'>1=strongly disagree, 2=disagree, 3=neutral, 4=agree, 5=strongly agree.</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-22'>
 <caption>1=strongly disagree, 2=disagree, 3=neutral, 4=agree, 5=strongly agree.</caption>
 <thead>
@@ -4663,6 +5123,7 @@ in SCBs than in PCBs.</td>
 <p id='p-1006'>From the previous table, the mean or average agreement level can be measured for each factor. Almost all of the respondents agreed that the severity of bad debts is more in state-owned commercial banks (SCBs) than in private commercial banks (PCBs).</p>
 <p class='p-center' id='p-1008'>Table 5.10: Percentage of respondents on the factors for comparison between state-owned and private commercial banks</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-23'>
 <caption>Table 5.10: Percentage of respondents on the factors for comparison between state-owned and private commercial banks</caption>
 <thead>
@@ -4866,6 +5327,7 @@ agree</th>
 <p class='p-center' id='p-1027'>non-performing loans</p>
 <p class='p-center' id='p-1029'>Table 5.11: Variables used in the “determinants of non-performing loans”</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-24'>
 <caption>Table 5.11: Variables used in the “determinants of non-performing loans”</caption>
 <thead>
@@ -4967,6 +5429,7 @@ YIAVG</td>
 <h2 id='h2-1062'>Descriptive statistics</h2>
 <p class='p-center' id='p-1064'>Table 5.12: Descriptive statistics on the variables related to the “determinants of NPL”</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-25'>
 <caption>Table 5.12: Descriptive statistics on the variables related to the “determinants of NPL”</caption>
 <thead>
@@ -5298,28 +5761,40 @@ rate</td>
 <p id='p-1073'>Figure 5.1 shows that loan growth in the banking sector is declining gradually. The variation among the loan growth rate is greater indicating that different banks work under different management policies. The variation was greater between 2006 and 2011 but banks seem to have been conservative in the lending policy after 2011. This explains the lower variability in the loan growth rate among banks between 2012 and 2017.</p>
 <p class='p-center' id='fig-cap-1074'>Figure 5.1: Loan growth rate of the selected 16 private commercial banks (2006–2017)</p>
 <figure id='fig-5-1'>
-  <img src='../assets/charts/figure_5_1.png' alt='Figure 5.1'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_5_1.png' alt='Figure 5.1' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 5.1</figcaption>
 </figure>
 <p class='p-center' id='src-1077'>Source: Annual reports of respective banks</p>
 <p id='p-1079'>Figure 5.2 portrays the rising non-performing loans in the private banking sector. Overall, there is a greater variability in the data for almost all the years. This indicates that banks have different non-performing loans to total loans for different bank characteristics. In 2011, the ratio for all the banks were in some form of alignment.</p>
 <p class='p-center' id='fig-cap-1080'>Figure 5.2: Non-performing loans to total loans of the selected 16 private commercial banks (2006–2017)</p>
 <figure id='fig-5-2'>
-  <img src='../assets/charts/figure_5_2.png' alt='Figure 5.2'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_5_2.png' alt='Figure 5.2' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 5.2</figcaption>
 </figure>
 <p class='p-center' id='src-1084'>Source: Annual reports of respective banks</p>
 <p id='p-1086'>If we look at the 16 banks cost of fund and average lending rate in figures 5.3 and 5.4, we will see that both fluctuate the same way so it can be inferred that there is a very good correlation between the cost of fund and average lending rate. But if we note each year’s rates we see that the variation among the cost of funds for each does not match the variation of lending rate. Lending rate for the respective bank’s cost of fund is very much narrow. This is because banks are much more sensitive to a change in lending rate than to a change in the cost of fund. For higher competition and keeping customers at hand, the lending rate has less variance.</p>
 <p class='p-center' id='fig-cap-1088'>Figure 5.3: Cost of fund of the selected 16 private commercial banks (2006–2017)</p>
 <figure id='fig-5-3'>
-  <img src='../assets/charts/figure_5_3.png' alt='Figure 5.3'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_5_3.png' alt='Figure 5.3' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 5.3</figcaption>
 </figure>
 <p class='p-center' id='src-1091'>Source: Annual reports of respective banks</p>
 <p id='p-1092'>On the other hand, there is greater variability in the cost of fund may be because some other factors besides lending rate affects the cost of fund and causes the banks to vary their rate to a greater degree. This raises the question whether this greater variability can bring about problematic loans through some macroeconomic phenomena. Our interest lies in finding out whether it is possible that the cost of fund affects the lending rate to make loans problematic in the long run. The policy implications are far greater because it requires government to check whether at the time of monetary transmission, the banks arbitrarily increase the cost of funds.</p>
 <p class='p-center' id='fig-cap-1094'>Figure 5.4: Average lending rate of the selected private commercial banks (2006–2017)</p>
 <figure id='fig-5-4'>
-  <img src='../assets/charts/figure_5_4.png' alt='Figure 5.4'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_5_4.png' alt='Figure 5.4' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 5.4</figcaption>
 </figure>
 <p class='p-center' id='src-1096'>Source: Annual reports of respective banks</p>
@@ -5327,6 +5802,7 @@ rate</td>
 <h2 id='h2-1099'>Variables used for the comparative analysis between state-owned and private commercial banks</h2>
 <p class='p-center' id='p-1101'>Table 5.13: Variables used in the “comparative analysis between the state-owned and private commercial banks”</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-26'>
 <caption>Table 5.13: Variables used in the “comparative analysis between the state-owned and private commercial banks”</caption>
 <thead>
@@ -5387,24 +5863,36 @@ asset</td>
 <h2 id='h2-1116'>Descriptive statistics</h2>
 <p id='p-1118'>In this section, the study is devoted to finding the association between bad loans and other loan-related factors to ascertain whether the same general relationship exists for the sample banks compared to the whole banking industry (figures 5.5, 5.6, and 5.7).</p>
 <figure id='fig-5-5'>
-  <img src='../assets/charts/figure_5_5.png' alt='Figure 5.5'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_5_5.png' alt='Figure 5.5' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 5.5</figcaption>
 </figure>
 <p class='p-center' id='src-1120'>Source: Annual reports of respective banks</p>
 <figure id='fig-5-6'>
-  <img src='../assets/charts/figure_5_6.png' alt='Figure 5.6'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_5_6.png' alt='Figure 5.6' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 5.6</figcaption>
 </figure>
 <p class='p-center' id='src-1122'>Source: Annual reports of respective banks</p>
 <p id='p-1124'>Figure 5.7 depicts the relationship between the cost efficiency of the selected private and public commercial banks for the same year, 2009 to 2017. The result shows almost the same findings that were portrayed in the previous objective. The graph reveals that as the cost per taka income increases for the 16 selected private commercial banks, the profitability declined but the public banks showed positive association between cost efficiency and profitability in many cases.</p>
 <p id='p-1126'>Figure 5.8 shows the relationship between non-performing loans to total loans, as well as advances and profitability for both banking groups. Here the inverse relationship is clearly found for both banking sectors. There exists a strong negative correlation between bad debts and profitability for the PCBs. On the other hand, the association between NPL and profit for the state-owned banks is not as strong   as the private banking sector. This indicates that the profitability of the public banks is severely affected by some other factors other than bad loans. Here both groups almost offer the same banking product, which is interest-based instruments. Therefore, the different sensitivity between profitability and bad loans reveals factors that have no correlation with either banking group.</p>
 <figure id='fig-5-7'>
-  <img src='../assets/charts/figure_5_7.png' alt='Figure 5.7'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_5_7.png' alt='Figure 5.7' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 5.7</figcaption>
 </figure>
 <p class='p-center' id='src-1129'>Source: Annual reports of respective banks</p>
 <figure id='fig-5-8'>
-  <img src='../assets/charts/figure_5_8.png' alt='Figure 5.8'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_5_8.png' alt='Figure 5.8' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 5.8</figcaption>
 </figure>
 <p class='p-center' id='src-1131'>Source: Annual reports of respective banks</p>
@@ -5412,12 +5900,18 @@ asset</td>
 <p id='p-1135'>Figure 5.10 portrays the average condition of loan recovery and profitability of the selected 16 private and 5 state-owned commercial banks of Bangladesh. During the eight years’ period, the recovery of the written-off loans for both public and private commercial banks increased at almost the same rate. For private banks, the association between the written-off loan recovery and profitability is positive and shows a strong link. However, for the public banks the correlation between the yearly loan recovery and profit is not very visible. This indicates that the recovery of loans by the public banks must be small relative to the respective bank size. Due to the large size of the public banks, the recovered loans did not add enough value to increase the profit of the public bank. On the other hand, the amount of recovered previously written-off loans added value to the private banks for the higher ration of recovery relative to the bank size.</p>
 <p id='p-1136'>Figures 5.9 and 5.10 show the yearly growth of loan write-off and loan recovery of the selected private and public banks for the year 2010 to 2017. Figure 5.9 shows that for the last four years or so the rate of writing-off loans increased for the state-owned banks compared to the relatively stable rate of the private banks. The right graph shows that the recovery rate previously written-off loans of the public banks is declining for the last couple of years.</p>
 <figure id='fig-5-9'>
-  <img src='../assets/charts/figure_5_9.png' alt='Figure 5.9'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_5_9.png' alt='Figure 5.9' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 5.9</figcaption>
 </figure>
 <p class='p-center' id='src-1139'>Source: Annual reports of respective banks</p>
 <figure id='fig-5-10'>
-  <img src='../assets/charts/figure_5_10.png' alt='Figure 5.10'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_5_10.png' alt='Figure 5.10' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 5.10</figcaption>
 </figure>
 <p class='p-center' id='src-1141'>Source: Annual reports of respective banks</p>
@@ -5431,6 +5925,7 @@ asset</td>
 <p id='p-1160'>Here α represents the Cronbach’s alpha, N is the number of items, C is the average inter-item covariance, and V is the average variance. Alpha score of 0.7 and above is considered acceptable in the general field of research but very close to 0.7 such as in our case of 0.69 is acceptable in some form of the research study.</p>
 <p class='p-center' id='p-1162'>Table 5.14: Case processing summary (Total)</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-27'>
 <caption>Table 5.14: Case processing summary (Total)</caption>
 <thead>
@@ -5478,6 +5973,7 @@ asset</td>
 <p id='p-1165'>The reliability statistics of the Cronbach’s alpha is sufficient enough to find a relationship between non-performing loans and other factors of non-performing loans.</p>
 <p class='p-center' id='p-1167'>Table 5.15: Reliability statistics</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-28'>
 <caption>Table 5.15: Reliability statistics</caption>
 <thead>
@@ -5504,6 +6000,7 @@ standardized items</th>
 <h3 id='h3-1176'>Validity and reliability of survey data</h3>
 <p class='p-center' id='p-1178'>Table 5.16: Case processing summary</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-29'>
 <caption>Table 5.16: Case processing summary</caption>
 <thead>
@@ -5550,6 +6047,7 @@ standardized items</th>
 </div>
 <p class='p-center' id='p-1180'>Table 5.17: Reliability statistics</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-30'>
 <caption>Table 5.17: Reliability statistics</caption>
 <thead>
@@ -5573,6 +6071,7 @@ standardized items</th>
 <h3 id='h3-1186'>Panel unit root test</h3>
 <p class='p-center' id='p-1188'>Table 5.18: Panel unit root test for the analysis of “determinants of non-performing loans”</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-31'>
 <caption>Table 5.18: Panel unit root test for the analysis of “determinants of non-performing loans”</caption>
 <thead>
@@ -5737,6 +6236,7 @@ fund</td>
 <h3 id='h3-1245'>Panel unit root test:</h3>
 <p class='p-center' id='p-1248'>Table 5.19: Panel unit root test for the analysis of “comparative analysis between the state-owned and private commercial banks”</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-32'>
 <caption>Table 5.19: Panel unit root test for the analysis of “comparative analysis between the state-owned and private commercial banks”</caption>
 <thead>
@@ -5826,6 +6326,7 @@ Written-off</td>
 <h3 id='h3-1259'>Regression analysis:</h3>
 <p id='p-1261'>Table 6.1: GMM estimation result (Arellano Bond – dynamic panel data) one step results</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-33'>
 <caption>Table 6.1: GMM estimation result (Arellano Bond – dynamic panel data) one step results</caption>
 <thead>
@@ -6332,20 +6833,29 @@ instruments</td>
 <p id='p-1297'>The research question tried to investigate the impact of cost of fund and lending rate through face-to-face interview, phone and emails. It was agreed by 52 percent bankers that increasing cost of fund could result in the rise of non-performing loans. However, the rest of the bankers remained neutral. Most borrowers on the other hand, agreed that in many situations cost of fund induced a change in lending rate.</p>
 <p class='p-center' id='fig-cap-1298'>Figure 6.1: Bankers&#x27; perception on cost of fund and lending rate affecting NPLs</p>
 <figure id='fig-6-1'>
-  <img src='../assets/charts/figure_6_1.png' alt='Figure 6.1'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_6_1.png' alt='Figure 6.1' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 6.1</figcaption>
 </figure>
 <p class='p-center' id='src-1300'>Source: Field survey data 2018</p>
 <p class='p-center' id='fig-cap-1302'>Figure 6.2: Borrowers&#x27; perception on cost of fund and lending rate affecting NPLs</p>
 <figure id='fig-6-2'>
-  <img src='../assets/charts/figure_6_2.png' alt='Figure 6.2'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_6_2.png' alt='Figure 6.2' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 6.2</figcaption>
 </figure>
 <p class='p-center' id='src-1304'>Source: Field survey data 2018</p>
 <p id='p-1305'>The survey reveals that bankers have given greater weight to lending rate figures (6.1 and 6.2) compared to cost of fund, although 52 percent of bankers agreed or strongly agreed that cost of fund did affect non-performing loans at some point in time. It was agreed by 60 percent of bankers that increasing lending rate actually causes the bad loans to incline. One-fourth of the bankers remained neutral on the effect of lending rate and cost of fund on bad loans. On the other hand, borrowers were more concerned with lending rate (figure 6.3) than bankers. It was agreed or strongly agreed by 76 percent of borrowers that higher lending rate increase non-performing loans.</p>
 <p class='p-center' id='fig-cap-1307'>Figure 6.3: Overall perception of the effect of cost of fund and lending rate affecting NPLs</p>
 <figure id='fig-6-3'>
-  <img src='../assets/charts/figure_6_3.png' alt='Figure 6.3'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_6_3.png' alt='Figure 6.3' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 6.3</figcaption>
 </figure>
 <p class='p-center' id='src-1309'>Source: Field survey data 2018</p>
@@ -6353,35 +6863,56 @@ instruments</td>
 <p id='p-1312'>The overall scenario points towards some of the important and most agreed determinants of non-performing loans from an overall perspective. Banking corruption, fund diversion and low monitoring of loans seem to be the important determinants of non- performing loans overall. This is not surprising considering the scam and corruption of the state-owned banks and some other financial institutions which have almost crippled the whole banking process in the last five to six years. Furthermore, a combination of factors, such as management inefficiency and unhealthy competition among the banks, also largely contribute a lot to the rise in the bad loans. Some of the previous studies (Rifat, 2017; Rahman et al., 2016; Mondal, 2016) showed that macroeconomic factors were the least of factors affecting bad loans, which is in alignment with this study. Data from the survey (figure 6.4) shows that the respondents viewed macroeconomic factors such as GDP growth, inflation, exchange rate, energy crisis and unemployment rate to be unimportant in the context of Bangladesh. As banking scams and management inefficiency have increased, the effect of economic growth and business scope has become almost insignificant. Another interesting finding of this survey is the ease at which business is conducted has contributed to rising non-performing loans. The following figures display the significant factors that have found favor with the respondents.</p>
 <p class='p-center' id='fig-cap-1314'>Figure 6.4: Least to highest causing factor of NPLs</p>
 <figure id='fig-6-4'>
-  <img src='../assets/charts/figure_6_4.png' alt='Figure 6.4'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_6_4.png' alt='Figure 6.4' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 6.4</figcaption>
 </figure>
 <p class='p-center' id='src-1317'>Source: Field survey data 2018</p>
 <figure id='fig-6-5'>
-  <img src='../assets/charts/figure_6_5.png' alt='Figure 6.5'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_6_5.png' alt='Figure 6.5' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 6.5</figcaption>
 </figure>
 <figure id='fig-6-6'>
-  <img src='../assets/charts/figure_6_6.png' alt='Figure 6.6'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_6_6.png' alt='Figure 6.6' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 6.6</figcaption>
 </figure>
 <p class='p-center' id='src-1320'>Source: Field survey data 2018</p>
 <figure id='fig-6-7'>
-  <img src='../assets/charts/figure_6_7.png' alt='Figure 6.7'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_6_7.png' alt='Figure 6.7' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 6.7</figcaption>
 </figure>
 <figure id='fig-6-8'>
-  <img src='../assets/charts/figure_6_8.png' alt='Figure 6.8'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_6_8.png' alt='Figure 6.8' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 6.8</figcaption>
 </figure>
 <p class='p-center' id='src-1324'>Source: Field survey data 2018</p>
 <p id='p-1326'>Of the overall respondents, 86 percent have suggested that higher political instability hampers business processes and ultimately affects the loan repayment capability of borrowers (figure 6.5). Over 90 percent of respondents have identified management problems to be a significant factor in explaining the bad loans that prevail in the banking sector of Bangladesh (figure 6.6). This result supports the importance of banking corruption and bad loan evaluation explained through figure 6.9.</p>
 <figure id='fig-6-9'>
-  <img src='../assets/charts/figure_6_9.png' alt='Figure 6.9'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_6_9.png' alt='Figure 6.9' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 6.9</figcaption>
 </figure>
 <figure id='fig-6-10'>
-  <img src='../assets/charts/figure_6_10.png' alt='Figure 6.10'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_6_10.png' alt='Figure 6.10' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 6.10</figcaption>
 </figure>
 <p class='p-center' id='src-1330'>Source: Field survey data 2018</p>
@@ -6390,6 +6921,7 @@ instruments</td>
 <h3 id='h3-1335'>Regression analysis: GMM estimation</h3>
 <p class='p-center' id='p-1337'>Table 6.2: GMM regression analysis for the “comparative analysis between the state-owned and private commercial banks”</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-34'>
 <caption>Table 6.2: GMM regression analysis for the “comparative analysis between the state-owned and private commercial banks”</caption>
 <thead>
@@ -6871,13 +7403,17 @@ group</td>
 <p id='p-1354'>The findings of the comparative analysis are based on a field survey questionnaire answered by 100 bankers and borrowers. Their perceptions have been recorded as given below: from the severity of non-performing loans was given the greatest weight in this survey. The subsequent factors, namely, profit, capital injection, use of technology, corruption, willful defaulters, cost inefficiency, branding, promotion, loan default against L/C acceptance (inland) and customer service came next in importance for the respondents as basis for this comparison of public banks with the private.</p>
 <p class='p-center' id='fig-cap-1355'>Figure 6.11: Least to highest comparing factors for non-performing loans in state-owned and private commercial banks</p>
 <figure id='fig-6-11'>
-  <img src='../assets/charts/figure_6_11.png' alt='Figure 6.11'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_6_11.png' alt='Figure 6.11' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 6.11</figcaption>
 </figure>
 <p class='p-center' id='src-1357'>Source: Field survey data 2018.</p>
 <p id='p-1359'>After each respondent have expressed their opinions their LIKERT scores was summed and all the agreement levels were averaged in order to gain the major comparing factors.</p>
 <p class='p-center' id='p-1360'>Table 6.3: Important factors that identifies the SCBs from PCBs</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-35'>
 <caption>Table 6.3: Important factors that identifies the SCBs from PCBs</caption>
 <thead>
@@ -6929,51 +7465,81 @@ group</td>
 <p id='p-1362'>The maximum score is 500 out of which the closest variables or factors were taken into consideration as comparison criteria. From the above horizontal bar graph, it is evident that ten factors scored above or near 400 and close to the strongly agreed condition.</p>
 <p id='p-1364'>Agreement level in percentage (%) of the respondents for different comparative criteria</p>
 <figure id='fig-6-12'>
-  <img src='../assets/charts/figure_6_12.png' alt='Figure 6.12'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_6_12.png' alt='Figure 6.12' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 6.12</figcaption>
 </figure>
 <figure id='fig-6-13'>
-  <img src='../assets/charts/figure_6_13.png' alt='Figure 6.13'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_6_13.png' alt='Figure 6.13' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 6.13</figcaption>
 </figure>
 <p class='p-center' id='src-1367'>Source: Field survey data 2018</p>
 <p id='p-1368'>Figure 6.12 shows that around 80 percent of respondents agreed or strongly agreed about the severity of non-performing loans in public banks compared to private banks. Most respondents showed a similar pattern of response due to the bad credit culture and fund diversion incidents in public banks over the last six-seven years. Figure 6.13 shows that generally capital injection is much higher in public banks.</p>
 <p id='p-1370'>Figure 6.14 portrays the respondents’ view on the use of advanced banking technology in public banks compared to private banks in Bangladesh. Of the total respondents, 58 percent strongly suggested that public banks are way behind private banks in use of technological benefits for customers and raise transaction security. Interestingly, with regard to corruption, only 45 percent strongly agreed and 38 percent agreed that public banks are more corrupt than private banks illegal. 38 percent agreed that management issues leading to corruption or corruption incidents independently deteriorated the profit of public banks (figure 6.15).</p>
 <figure id='fig-6-14'>
-  <img src='../assets/charts/figure_6_14.png' alt='Figure 6.14'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_6_14.png' alt='Figure 6.14' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 6.14</figcaption>
 </figure>
 <figure id='fig-6-15'>
-  <img src='../assets/charts/figure_6_15.png' alt='Figure 6.15'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_6_15.png' alt='Figure 6.15' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 6.15</figcaption>
 </figure>
 <p class='p-center' id='src-1374'>Source: Field survey data 2018</p>
 <p id='p-1375'>In terms of branding and promotion of banking products, most respondents agreed that public banks are less interested or less experienced in promoting their products and services in a competitive manner as compared to private banks. Figure 6.17 shows the participants’ view on the position that willful defaulters mostly go to public banks for acquiring loans. This is possibly due to the mindset of borrowers that they could get away with not repaying the loan amount in time due to the weak monitoring and credit policy of public banks.</p>
 <figure id='fig-6-16'>
-  <img src='../assets/charts/figure_6_16.png' alt='Figure 6.16'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_6_16.png' alt='Figure 6.16' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 6.16</figcaption>
 </figure>
 <figure id='fig-6-17'>
-  <img src='../assets/charts/figure_6_17.png' alt='Figure 6.17'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_6_17.png' alt='Figure 6.17' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 6.17</figcaption>
 </figure>
 <p class='p-center' id='src-1379'>Source: Field survey data 2018</p>
 <figure id='fig-6-18'>
-  <img src='../assets/charts/figure_6_18.png' alt='Figure 6.18'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_6_18.png' alt='Figure 6.18' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 6.18</figcaption>
 </figure>
 <figure id='fig-6-19'>
-  <img src='../assets/charts/figure_6_19.png' alt='Figure 6.19'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_6_19.png' alt='Figure 6.19' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 6.19</figcaption>
 </figure>
 <p class='p-center' id='src-1381'>Source: Field survey data 2018</p>
 <p id='p-1382'>Majority of the respondents agreed or strongly agreed that cost inefficiency was a significant factor influencing the profit of public banks compared to private banks. Surprisingly, this perception is in direct contradiction with the findings of secondary analysis, which showed that cost inefficiency was not a significant factor in the income of public banks (figure 6.18). Figure 6.19 shows strong agreements among respondents on loan against L/C acceptance (inland) being a significant factor in explaining bad debts in public banks compared to private banks.</p>
 <figure id='fig-6-20'>
-  <img src='../assets/charts/figure_6_20.png' alt='Figure 6.20'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_6_20.png' alt='Figure 6.20' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 6.20</figcaption>
 </figure>
 <figure id='fig-6-21'>
-  <img src='../assets/charts/figure_6_21.png' alt='Figure 6.21'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_6_21.png' alt='Figure 6.21' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 6.21</figcaption>
 </figure>
 <p class='p-center' id='src-1385'>Source: Field survey data 2018</p>
@@ -7136,7 +7702,10 @@ group</td>
 <p class='p-center' id='fig-cap-1639'>Figure 10.1: History of NPL in Bangladesh</p>
 <p class='p-center' id='p-1640'>(June 2011 – September 2021)</p>
 <figure id='fig-10-1'>
-  <img src='../assets/charts/figure_10_1.png' alt='Figure 10.1'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_10_1.png' alt='Figure 10.1' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 10.1</figcaption>
 </figure>
 <p class='p-center' id='src-1643'>Source: World Bank.</p>
@@ -7150,7 +7719,10 @@ group</td>
 <p id='p-1656'>In these difficult times, the anticipation of future levels of NPLs should be the key strategies. Pre-crisis NPLs should not be used as the forecasting criteria rather lessons from the previous crisis should be researched and studied to formulate effective plans. It is imperative that proper monitoring of all types of loans with special emphasis to rescheduled loans amidst the COVID-19 pandemic be supervised by Bangladesh Bank and Government to reduce the detrimental effect of coronavirus spread in the banking industry. In this regard, Bangladesh Bank prohibited banks not to classify any loans from January–December 2020 in order to help business people fight the economic fallout of COVID-19. Besides Bangladesh Bank and Government has provided stimulus packages and other flexibilities to repay the loan to help the businesses run smoothly in this fatal situation.</p>
 <p class='p-center' id='fig-cap-1658'>Figure 10.3: NPL percentage (%) to total loans of the SAARC (2011–2020)</p>
 <figure id='fig-10-2'>
-  <img src='../assets/charts/figure_10_2.png' alt='Figure 10.2'/>
+  <div class="figure-wrapper" title="Click to view full size">
+    <img src='../assets/charts/figure_10_2.png' alt='Figure 10.2' loading='lazy'/>
+    <span class="zoom-badge">🔍 Tap to enlarge</span>
+  </div>
   <figcaption>Figure 10.2</figcaption>
 </figure>
 <p class='p-center' id='src-1661'>Source: World Bank.</p>
@@ -7172,6 +7744,7 @@ group</td>
     Questionnaire on the bankers and borrowers’ perception on the rising non-performing loans (NPLs)
   </h1>
   <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-36'>
 <caption>Appendix I: Questionnaire on the bankers and borrowers’ perception on the rising non-performing loans (NPLs)</caption>
 <thead>
@@ -7197,6 +7770,7 @@ group</td>
 <p id='app-p-1996'>Please reply to all thestatements.</p>
 <p id='app-p-1997'>Your identity will be kept anonymous if you do not want yourselves to be revealed.</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-37'>
 <caption>Your identity will be kept anonymous if you do not want yourselves to be revealed.</caption>
 <thead>
@@ -7477,6 +8051,7 @@ NPLs</td>
     Questionnaire for the comparison between state-owned commercial banks (SCBs) and private commercial banks (PCBs)
   </h1>
   <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-38'>
 <caption>Appendix II: Questionnaire for the comparison between state-owned commercial banks (SCBs) and private commercial banks (PCBs)</caption>
 <thead>
@@ -7686,6 +8261,7 @@ than it is in PCBs.</td>
     Banking sector year-wise gross NPL ratio and its composition
   </h1>
   <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-39'>
 <caption>Appendix III: Banking sector year-wise gross NPL ratio and its composition</caption>
 <thead>
@@ -7815,6 +8391,7 @@ than it is in PCBs.</td>
     Banking sector NPL composition
   </h1>
   <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-40'>
 <caption>Appendix IV: Banking sector NPL composition</caption>
 <thead>
@@ -7873,6 +8450,7 @@ than it is in PCBs.</td>
 </div>
 <p id='app-p-2008'>Source: Bangladesh Bank financial stability report 2020</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-41'>
 <caption>Source: Bangladesh Bank financial stability report 2020</caption>
 <thead>
@@ -7938,6 +8516,7 @@ than it is in PCBs.</td>
     Banking sector deposits breakdown excluding inter bank deposit
   </h1>
   <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-42'>
 <caption>Appendix V: Banking sector deposits breakdown excluding inter bank deposit</caption>
 <thead>
@@ -7983,6 +8562,7 @@ than it is in PCBs.</td>
 </div>
 <p id='app-p-2013'>Source: Bangladesh Bank financial stability report 2020</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-43'>
 <caption>Source: Bangladesh Bank financial stability report 2020</caption>
 <thead>
@@ -8035,6 +8615,7 @@ than it is in PCBs.</td>
     Banking sector selected ratios
   </h1>
   <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-44'>
 <caption>Appendix VI: Banking sector selected ratios</caption>
 <thead>
@@ -8192,6 +8773,7 @@ than it is in PCBs.</td>
     Banking sector year-wise ADR
   </h1>
   <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-45'>
 <caption>Appendix VII: Banking sector year-wise ADR</caption>
 <thead>
@@ -8249,6 +8831,7 @@ than it is in PCBs.</td>
     NPL ratio of different bank groups
   </h1>
   <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-46'>
 <caption>Appendix VIII: NPL ratio of different bank groups</caption>
 <thead>
@@ -8350,6 +8933,7 @@ than it is in PCBs.</td>
     ROA of different bank groups
   </h1>
   <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-47'>
 <caption>Appendix IX: ROA of different bank groups</caption>
 <thead>
@@ -8451,6 +9035,7 @@ than it is in PCBs.</td>
     ROE of different bank groups
   </h1>
   <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-48'>
 <caption>Appendix X: ROE of different bank groups</caption>
 <thead>
@@ -8552,6 +9137,7 @@ than it is in PCBs.</td>
     Cost to income ratio (efficiency) of different bank groups
   </h1>
   <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-49'>
 <caption>Appendix XI: Cost to income ratio (efficiency) of different bank groups</caption>
 <thead>
@@ -8654,6 +9240,7 @@ than it is in PCBs.</td>
   </h1>
   <h2 id='app-h2-2039'>Amount in Billion (BDT)</h2>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-50'>
 <caption>Amount in Billion (BDT)</caption>
 <thead>
@@ -8756,6 +9343,7 @@ than it is in PCBs.</td>
   </h1>
   <p id='app-p-2045'>Amount in Billion (BDT)</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-51'>
 <caption>Amount in Billion (BDT)</caption>
 <thead>
@@ -8858,6 +9446,7 @@ than it is in PCBs.</td>
   </h1>
   <p id='app-p-2050'>Amount in Billion (BDT)</p>
 <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-52'>
 <caption>Amount in Billion (BDT)</caption>
 <thead>
@@ -8943,6 +9532,7 @@ than it is in PCBs.</td>
 <section id="keywords">
   <h1>Key Words</h1>
   <div class='table-container'>
+<div class='table-scroll-hint'><span>📊 Data Table</span><span>↔ Scroll horizontally to view full table</span></div>
 <table id='tbl-keywords'>
 <caption>Key Words</caption>
 <thead>
@@ -9178,6 +9768,170 @@ than it is in PCBs.</td>
 </div>
   <a href="#sidebar" class="back-to-top">↑ Back to Navigation</a>
 </section>
-  </main>
+    </main>
+  </div>
+
+  <!-- Image Zoom Lightbox Modal -->
+  <div id="image-modal" class="image-modal" role="dialog" aria-hidden="true">
+    <div class="modal-backdrop" id="modal-backdrop"></div>
+    <div class="modal-content">
+      <button id="modal-close" class="modal-close-btn" aria-label="Close image">✕</button>
+      <img id="modal-img" src="" alt="Enlarged figure"/>
+      <div id="modal-caption" class="modal-caption"></div>
+    </div>
+  </div>
+
+  <!-- Floating Back to Top Button -->
+  <button id="btn-back-to-top" title="Scroll to Top" aria-label="Scroll to top">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg>
+  </button>
+
+  <script>
+    // Responsive Sidebar Drawer
+    const sidebar = document.getElementById('sidebar');
+    const backdrop = document.getElementById('sidebar-backdrop');
+    const btnToggleSidebar = document.getElementById('btn-toggle-sidebar');
+    const btnCloseSidebar = document.getElementById('btn-close-sidebar');
+
+    function openSidebar() {
+      sidebar.classList.add('open');
+      backdrop.classList.add('open');
+      if (window.innerWidth <= 920) document.body.style.overflow = 'hidden';
+    }
+
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      backdrop.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    if (btnToggleSidebar) btnToggleSidebar.addEventListener('click', () => {
+      sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+    });
+    if (btnCloseSidebar) btnCloseSidebar.addEventListener('click', closeSidebar);
+    if (backdrop) backdrop.addEventListener('click', closeSidebar);
+
+    // Auto-close on link click (mobile)
+    document.querySelectorAll('#sidebar a').forEach(a => {
+      a.addEventListener('click', () => {
+        if (window.innerWidth <= 920) closeSidebar();
+      });
+    });
+
+    // Reading Progress & Floating Back to Top
+    const progressBar = document.getElementById('reading-progress-bar');
+    const backToTopBtn = document.getElementById('btn-back-to-top');
+
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (docHeight > 0 && progressBar) {
+        const pct = Math.min(100, Math.max(0, (scrollTop / docHeight) * 100));
+        progressBar.style.width = pct + '%';
+      }
+      if (backToTopBtn) {
+        if (scrollTop > 350) backToTopBtn.classList.add('visible');
+        else backToTopBtn.classList.remove('visible');
+      }
+    });
+
+    if (backToTopBtn) {
+      backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    // Dynamic Font Sizing
+    let currentFontSize = parseInt(localStorage.getItem('reader-font-size') || '17', 10);
+    function setFontSize(sz) {
+      currentFontSize = Math.min(24, Math.max(14, sz));
+      document.documentElement.style.setProperty('--reader-font-size', currentFontSize + 'px');
+      localStorage.setItem('reader-font-size', currentFontSize);
+    }
+    setFontSize(currentFontSize);
+
+    document.getElementById('btn-font-dec')?.addEventListener('click', () => setFontSize(currentFontSize - 1));
+    document.getElementById('btn-font-inc')?.addEventListener('click', () => setFontSize(currentFontSize + 1));
+
+    // Theme Switcher (Light / Sepia / Dark)
+    function setTheme(theme) {
+      document.body.setAttribute('data-theme', theme);
+      localStorage.setItem('reader-theme', theme);
+      document.querySelectorAll('.theme-controls .tool-btn').forEach(b => b.classList.remove('active'));
+      const activeBtn = document.getElementById('theme-' + theme + '-btn');
+      if (activeBtn) activeBtn.classList.add('active');
+    }
+    const savedTheme = localStorage.getItem('reader-theme') || 'default';
+    if (savedTheme !== 'default') setTheme(savedTheme);
+
+    document.getElementById('theme-light-btn')?.addEventListener('click', () => setTheme('light'));
+    document.getElementById('theme-sepia-btn')?.addEventListener('click', () => setTheme('sepia'));
+    document.getElementById('theme-dark-btn')?.addEventListener('click', () => setTheme('dark'));
+
+    // Lightbox Modal for Figures & Charts
+    const modal = document.getElementById('image-modal');
+    const modalImg = document.getElementById('modal-img');
+    const modalCaption = document.getElementById('modal-caption');
+    const modalClose = document.getElementById('modal-close');
+    const modalBackdrop = document.getElementById('modal-backdrop');
+
+    function openModal(src, caption) {
+      if (!modal || !modalImg) return;
+      modalImg.src = src;
+      if (modalCaption) modalCaption.textContent = caption || '';
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      if (!modal) return;
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('figure .figure-wrapper, figure img').forEach(el => {
+      el.addEventListener('click', () => {
+        const img = el.tagName === 'IMG' ? el : el.querySelector('img');
+        if (!img) return;
+        const fig = el.closest('figure');
+        const cap = fig ? fig.querySelector('figcaption')?.textContent : '';
+        openModal(img.src, cap);
+      });
+    });
+
+    if (modalClose) modalClose.addEventListener('click', closeModal);
+    if (modalBackdrop) modalBackdrop.addEventListener('click', closeModal);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // Active Chapter Highlighting
+    const sections = document.querySelectorAll('main section, main article');
+    const navLinks = document.querySelectorAll('#sidebar a');
+    const currentIndicator = document.getElementById('current-chapter-indicator');
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            navLinks.forEach(link => {
+              if (link.getAttribute('href') === '#' + id) {
+                navLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                if (currentIndicator) {
+                  currentIndicator.textContent = link.textContent;
+                }
+              }
+            });
+          }
+        });
+      }, { rootMargin: '-20% 0px -65% 0px' });
+
+      sections.forEach(s => observer.observe(s));
+    }
+  </script>
 </body>
 </html>
