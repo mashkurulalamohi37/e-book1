@@ -7,4 +7,3 @@ PyMuPDF>=1.23.0
 ebooklib>=0.18
 pytest>=8.0.0
 PyYAML>=6.0
-pywin32>=306
